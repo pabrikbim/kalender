@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kalender Indonesia 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --indigo-deep:#101b34;
+    --indigo:#1c2c52;
+    --indigo-light:#2f4373;
+    --gold:#cf9d3e;
+    --gold-soft:#e7c274;
+    --paper:#faf3e4;
+    --paper-line:#e6d9bc;
+    --merah:#b5432f;
+    --merah-soft:#f0ded8;
+    --hijau:#14532d;
+    --kuning:#f6c935;
+    --hitam:#1a1a1a;
+    --ink:#2a2115;
+    --ink-soft:#6b6252;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:
+      radial-gradient(ellipse at 20% -10%, #24365f 0%, transparent 55%),
+      radial-gradient(ellipse at 100% 0%, #1a2747 0%, transparent 50%),
+      var(--indigo-deep);
+    color:var(--paper);
+    font-family:'Plus Jakarta Sans', sans-serif;
+    min-height:100vh;
+    padding:clamp(16px,4vw,48px);
+  }
+  .batik-strip{
+    height:14px;
+    background-image: repeating-linear-gradient(135deg, var(--gold) 0 2px, transparent 2px 16px);
+    opacity:.35;
+    border-radius:8px;
+    margin-bottom:28px;
+  }
+  header.top{
+    display:flex; flex-wrap:wrap; align-items:flex-end; justify-content:space-between;
+    gap:16px; margin-bottom:8px;
+  }
+  .eyebrow{
+    font-family:'Space Mono', monospace;
+    font-size:12px; letter-spacing:.14em; text-transform:uppercase;
+    color:var(--gold-soft); margin:0 0 6px;
+  }
+  h1{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    font-size:clamp(30px,4.6vw,50px);
+    margin:0;
+    line-height:1.02;
+    color:#fbf3e1;
+  }
+  h1 em{ font-style:italic; color:var(--gold-soft); font-weight:500;}
+  .subtitle{
+    max-width:420px;
+    font-size:13.5px;
+    color:#b9c2dc;
+    line-height:1.55;
+  }
+
+  /* year switcher */
+  .year-nav{
+    display:flex; gap:8px; margin-top:22px; flex-wrap:wrap;
+  }
+  .year-pill{
+    font-family:'Fraunces',serif;
+    font-size:15px; font-weight:600;
+    padding:7px 16px;
+    border-radius:10px;
+    border:1px solid rgba(255,255,255,.14);
+    background:rgba(255,255,255,.03);
+    color:#c8d0e6;
+    cursor:pointer;
+    transition:all .15s ease;
+  }
+  .year-pill:hover{ border-color:var(--gold-soft); color:var(--gold-soft); }
+  .year-pill.active{
+    background:var(--merah);
+    border-color:var(--merah);
+    color:#fbeee9;
+  }
+  .data-note{
+    font-size:11.5px; color:#8f98b8; margin:10px 2px 0;
+    font-style:italic;
+  }
+
+  /* month switcher */
+  .month-nav{
+    display:flex; align-items:center; gap:10px;
+    margin:26px 0 18px;
+  }
+  .nav-arrow{
+    flex:0 0 auto;
+    width:38px; height:38px; border-radius:50%;
+    border:1px solid rgba(231,194,116,.35);
+    background:rgba(255,255,255,.03);
+    color:var(--gold-soft);
+    font-size:16px;
+    cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+    transition:background .15s ease, transform .15s ease;
+  }
+  .nav-arrow:hover{ background:rgba(231,194,116,.15); transform:translateY(-1px);}
+  .month-pills{
+    display:flex; gap:6px; overflow-x:auto; scrollbar-width:thin;
+    padding-bottom:4px; flex:1;
+  }
+  .month-pills::-webkit-scrollbar{height:4px;}
+  .month-pills::-webkit-scrollbar-thumb{background:rgba(231,194,116,.3); border-radius:4px;}
+  .pill{
+    flex:0 0 auto;
+    font-family:'Space Mono',monospace;
+    font-size:12px;
+    padding:8px 13px;
+    border-radius:999px;
+    border:1px solid rgba(255,255,255,.12);
+    background:transparent;
+    color:#c8d0e6;
+    cursor:pointer;
+    white-space:nowrap;
+    transition:all .15s ease;
+  }
+  .pill:hover{ border-color:var(--gold-soft); color:var(--gold-soft);}
+  .pill.active{
+    background:var(--gold);
+    border-color:var(--gold);
+    color:#241a06;
+    font-weight:700;
+  }
+
+  /* calendar card */
+  .calendar-card{
+    background:var(--paper);
+    color:var(--ink);
+    border-radius:18px;
+    padding:clamp(16px,3vw,32px);
+    box-shadow:0 30px 60px -20px rgba(0,0,0,.55);
+    position:relative;
+    overflow:hidden;
+  }
+  .calendar-card::before{
+    content:"";
+    position:absolute; inset:0;
+    background-image: repeating-linear-gradient(45deg, rgba(207,157,62,.05) 0 2px, transparent 2px 22px);
+    pointer-events:none;
+  }
+  .month-title{
+    font-family:'Fraunces', serif;
+    font-size:clamp(24px,3vw,32px);
+    font-weight:600;
+    margin:0 0 4px;
+  }
+  .month-title .year{ color:var(--merah); }
+  .month-meta{
+    font-family:'Space Mono',monospace;
+    font-size:11.5px; color:var(--ink-soft);
+    letter-spacing:.06em; text-transform:uppercase;
+    margin-bottom:18px;
+  }
+  .weekday-row{
+    display:grid; grid-template-columns:repeat(7,1fr);
+    gap:6px; margin-bottom:8px;
+  }
+  .weekday-row span{
+    font-family:'Space Mono',monospace;
+    font-size:11px; text-align:center;
+    letter-spacing:.05em;
+    color:var(--ink-soft);
+    text-transform:uppercase;
+  }
+  .weekday-row span.fri{ color:var(--hijau); }
+  .weekday-row span.sat{ color:var(--hitam); }
+  .weekday-row span.sun{ color:var(--merah); }
+
+  .day-grid{
+    display:grid; grid-template-columns:repeat(7,1fr);
+    gap:6px;
+  }
+  .day-cell{
+    position:relative;
+    aspect-ratio:1/0.86;
+    border-radius:10px;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    font-family:'Space Mono',monospace;
+    font-size:clamp(12px,2vw,15px);
+    color:var(--hitam);
+    background:rgba(207,157,62,.05);
+    border:1px solid transparent;
+  }
+  .day-cell.pad{ background:transparent; }
+  .day-cell.fri{ color:var(--hijau); }
+  .day-cell.sun{ color:var(--merah); }
+  .day-cell.today{
+    border-color:var(--indigo-light);
+    box-shadow:inset 0 0 0 1px var(--indigo-light);
+  }
+  .day-cell.today .num{ font-weight:700; }
+  /* libur nasional: angka merah (menimpa warna Jumat/Sabtu) */
+  .day-cell.libur{
+    background:var(--merah-soft);
+    color:var(--merah);
+    border-color:rgba(181,67,47,.35);
+  }
+  .day-cell.libur .num, .day-cell.cuti .num{ font-weight:700; }
+  /* cuti bersama: fill kuning, warna angka ikut hari (hitam / hijau jika Jumat / merah jika Minggu) */
+  .day-cell.cuti{
+    background:var(--kuning);
+  }
+  .day-cell .num{ line-height:1; }
+  .day-cell .dot{
+    width:4px; height:4px; border-radius:50%;
+    background:currentColor;
+    margin-top:3px;
+    opacity:.85;
+  }
+  .day-cell.has-note{ cursor:default; }
+
+  .tooltip{
+    position:absolute; bottom:calc(100% + 8px); left:50%; transform:translateX(-50%);
+    background:var(--indigo-deep); color:#f3ead6;
+    font-family:'Plus Jakarta Sans',sans-serif;
+    font-size:11.5px; line-height:1.4;
+    padding:8px 10px; border-radius:8px;
+    width:max-content; max-width:180px;
+    text-align:center;
+    box-shadow:0 10px 24px rgba(0,0,0,.35);
+    opacity:0; pointer-events:none;
+    transition:opacity .12s ease;
+    z-index:5;
+  }
+  .day-cell.has-note:hover .tooltip{ opacity:1; }
+
+  /* legend */
+  .legend{
+    display:flex; flex-wrap:wrap; gap:18px;
+    margin-top:20px; padding-top:16px;
+    border-top:1px dashed var(--paper-line);
+    font-size:12px; color:var(--ink-soft);
+    position:relative; z-index:1;
+  }
+  .legend-item{ display:flex; align-items:center; gap:7px; }
+  .swatch{ width:13px; height:13px; border-radius:4px; flex:0 0 auto;}
+  .swatch.libur{ background:var(--merah-soft); border:1.5px solid var(--merah); }
+  .swatch.cuti{ background:var(--kuning); }
+  .swatch.sun{ background:var(--merah); }
+  .swatch.fri{ background:var(--hijau); }
+  .swatch.sat{ background:var(--hitam); }
+  .swatch.today{ border:1.5px solid var(--indigo-light); }
+
+  /* holiday list */
+  .list-section{ margin-top:40px; }
+  .list-section h2{
+    font-family:'Fraunces',serif; font-weight:600;
+    font-size:22px; color:#fbf3e1; margin:0 0 4px;
+  }
+  .list-section .sub{
+    font-size:12.5px; color:#9aa4c2; margin-bottom:18px;
+  }
+  .holiday-list{
+    list-style:none; margin:0; padding:0;
+    display:grid; gap:8px;
+  }
+  .holiday-list li{
+    display:grid;
+    grid-template-columns:92px 1fr auto;
+    align-items:center;
+    gap:14px;
+    background:rgba(255,255,255,.035);
+    border:1px solid rgba(255,255,255,.07);
+    border-radius:10px;
+    padding:11px 14px;
+  }
+  .holiday-list .date{
+    font-family:'Space Mono',monospace;
+    font-size:12.5px; color:var(--gold-soft);
+  }
+  .holiday-list .name{ font-size:13.5px; color:#eef1fb; }
+  .holiday-list .name .day-of{ display:block; font-size:11px; color:#8f98b8; margin-top:1px;}
+  .badge{
+    font-family:'Space Mono',monospace;
+    font-size:9.5px; letter-spacing:.05em; text-transform:uppercase;
+    padding:4px 8px; border-radius:999px;
+    white-space:nowrap;
+  }
+  .badge.libur{ background:var(--merah); color:#fbeee9; }
+  .badge.cuti{ background:var(--kuning); color:#3a2c00; }
+
+  footer{
+    margin-top:36px; padding-top:18px;
+    border-top:1px solid rgba(255,255,255,.08);
+    font-size:11.5px; color:#7d87a6; line-height:1.6;
+  }
+  footer a{ color:var(--gold-soft); }
+  footer .credit{
+    margin-top:14px;
+    font-family:'Space Mono',monospace;
+    font-size:11px;
+    color:#9aa4c2;
+    letter-spacing:.03em;
+  }
+  footer .credit strong{
+    color:var(--gold-soft);
+    font-weight:700;
+  }
+
+  @media (max-width:520px){
+    .holiday-list li{ grid-template-columns:78px 1fr; }
+    .holiday-list .badge{ grid-column:1/-1; justify-self:start; margin-top:2px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="batik-strip"></div>
+
+<header class="top">
+  <div>
+    <p class="eyebrow">Tanggalan · Minggu dimulai Senin</p>
+    <h1>Kalender <em>Indonesia</em> <span id="yearInTitle">2026</span></h1>
+  </div>
+  <p class="subtitle" id="subtitleText">Lengkap dengan hari libur nasional dan cuti bersama sesuai SKB 3 Menteri Nomor 1497, 2, dan 5 Tahun 2025.</p>
+</header>
+
+<div class="year-nav" id="yearPills"></div>
+<p class="data-note" id="dataNote"></p>
+
+<div class="month-nav">
+  <button class="nav-arrow" id="prevBtn" aria-label="Bulan sebelumnya">&#8592;</button>
+  <div class="month-pills" id="monthPills"></div>
+  <button class="nav-arrow" id="nextBtn" aria-label="Bulan berikutnya">&#8594;</button>
+</div>
+
+<section class="calendar-card">
+  <h2 class="month-title" id="monthTitle"></h2>
+  <p class="month-meta" id="monthMeta"></p>
+  <div class="weekday-row">
+    <span>Sen</span><span>Sel</span><span>Rab</span><span>Kam</span><span class="fri">Jum</span>
+    <span class="sat">Sab</span><span class="sun">Min</span>
+  </div>
+  <div class="day-grid" id="dayGrid"></div>
+
+  <div class="legend">
+    <div class="legend-item"><span class="swatch libur"></span> Libur nasional (angka merah)</div>
+    <div class="legend-item"><span class="swatch cuti"></span> Cuti bersama</div>
+    <div class="legend-item"><span class="swatch sun"></span> Minggu</div>
+    <div class="legend-item"><span class="swatch fri"></span> Jumat</div>
+    <div class="legend-item"><span class="swatch sat"></span> Sabtu</div>
+    <div class="legend-item"><span class="swatch today"></span> Hari ini</div>
+  </div>
+</section>
+
+<section class="list-section">
+  <h2 id="listTitle">Daftar hari libur</h2>
+  <p class="sub" id="listSub"></p>
+  <ul class="holiday-list" id="holidayList"></ul>
+</section>
+
+<footer>
+  Tahun 2026: sumber resmi Surat Keputusan Bersama (SKB) Menteri Agama, Menteri Ketenagakerjaan, dan Menteri PANRB Nomor 1497, 2, dan 5 Tahun 2025 tentang Hari Libur Nasional dan Cuti Bersama Tahun 2026, ditetapkan 19 September 2025.<br>
+  Tahun 2027–2030: tanggal masih berupa perkiraan (belum ada SKB resmi), disusun berdasarkan proyeksi kalender hijriah, saka, dan imlek yang berlaku umum. Pemerintah biasanya menerbitkan SKB resmi hanya untuk tahun berjalan atau satu tahun ke depan — cek kembali kalender ini menjelang tahunnya untuk kepastian, terutama untuk Idulfitri, Iduladha, Isra Mikraj, Maulid Nabi, dan Nyepi yang bergantung sidang isbat/rukyatul hilal.
+  <p class="credit">Dikembangkan oleh <strong>Supriyanto</strong></p>
+</footer>
+
+<script>
+const MONTHS = ["Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember"];
+const DAY_NAMES = ["Senin","Selasa","Rabu","Kamis","Jumat","Sabtu","Minggu"];
+const YEARS = [2026, 2027, 2028, 2029, 2030];
+
+// Tahun 2026: resmi (SKB 3 Menteri No. 1497/2/5 Tahun 2025).
+// Tahun 2027-2030: perkiraan, karena pemerintah baru menetapkan SKB untuk tahun berjalan/tahun depan.
+// Tanggal libur berbasis hijriah/saka/imlek pada tahun-tahun ini masih dapat bergeser 1 hari
+// menyesuaikan hasil sidang isbat & rukyatul hilal resmi Kemenag saat sudah ditetapkan.
+const OFFICIAL_YEAR = 2026;
+
+// key: "M-D" (month 1-12, day)
+const HOLIDAYS_BY_YEAR = {
+  2026: {
+    "1-1":   {name:"Tahun Baru 2026 Masehi", type:"libur"},
+    "1-16":  {name:"Isra Mikraj Nabi Muhammad SAW", type:"libur"},
+    "2-16":  {name:"Cuti Bersama Tahun Baru Imlek", type:"cuti"},
+    "2-17":  {name:"Tahun Baru Imlek 2577 Kongzili", type:"libur"},
+    "3-18":  {name:"Cuti Bersama Hari Suci Nyepi", type:"cuti"},
+    "3-19":  {name:"Hari Suci Nyepi (Tahun Baru Saka 1948)", type:"libur"},
+    "3-20":  {name:"Cuti Bersama Idulfitri", type:"cuti"},
+    "3-21":  {name:"Idulfitri 1447 Hijriah", type:"libur"},
+    "3-22":  {name:"Idulfitri 1447 Hijriah", type:"libur"},
+    "3-23":  {name:"Cuti Bersama Idulfitri", type:"cuti"},
+    "3-24":  {name:"Cuti Bersama Idulfitri", type:"cuti"},
+    "4-3":   {name:"Wafat Yesus Kristus", type:"libur"},
+    "4-5":   {name:"Kebangkitan Yesus Kristus (Paskah)", type:"libur"},
+    "5-1":   {name:"Hari Buruh Internasional", type:"libur"},
+    "5-14":  {name:"Kenaikan Yesus Kristus", type:"libur"},
+    "5-15":  {name:"Cuti Bersama Kenaikan Yesus Kristus", type:"cuti"},
+    "5-27":  {name:"Iduladha 1447 Hijriah", type:"libur"},
+    "5-28":  {name:"Cuti Bersama Iduladha", type:"cuti"},
+    "5-31":  {name:"Hari Raya Waisak 2570 BE", type:"libur"},
+    "6-1":   {name:"Hari Lahir Pancasila", type:"libur"},
+    "6-16":  {name:"1 Muharam, Tahun Baru Islam 1448 H", type:"libur"},
+    "8-17":  {name:"Proklamasi Kemerdekaan RI", type:"libur"},
+    "8-25":  {name:"Maulid Nabi Muhammad SAW", type:"libur"},
+    "12-24": {name:"Cuti Bersama Hari Raya Natal", type:"cuti"},
+    "12-25": {name:"Kelahiran Yesus Kristus (Natal)", type:"libur"},
+  },
+  2027: {
+    "1-1":   {name:"Tahun Baru Masehi", type:"libur"},
+    "1-5":   {name:"Isra Mikraj Nabi Muhammad SAW", type:"libur"},
+    "2-6":   {name:"Tahun Baru Imlek", type:"libur"},
+    "3-9":   {name:"Hari Suci Nyepi", type:"libur"},
+    "3-10":  {name:"Hari Raya Idulfitri", type:"libur"},
+    "3-11":  {name:"Cuti Bersama Idulfitri", type:"cuti"},
+    "3-26":  {name:"Wafat Yesus Kristus (Jumat Agung)", type:"libur"},
+    "5-1":   {name:"Hari Buruh Internasional", type:"libur"},
+    "5-6":   {name:"Kenaikan Yesus Kristus", type:"libur"},
+    "5-17":  {name:"Iduladha", type:"libur"},
+    "5-20":  {name:"Hari Raya Waisak", type:"libur"},
+    "6-1":   {name:"Hari Lahir Pancasila", type:"libur"},
+    "6-6":   {name:"Tahun Baru Islam", type:"libur"},
+    "8-15":  {name:"Maulid Nabi Muhammad SAW", type:"libur"},
+    "8-17":  {name:"Proklamasi Kemerdekaan RI", type:"libur"},
+    "12-25": {name:"Kelahiran Yesus Kristus (Natal)", type:"libur"},
+    "12-26": {name:"Isra Mikraj Nabi Muhammad SAW", type:"libur"},
+  },
+  2028: {
+    "1-1":   {name:"Tahun Baru Masehi", type:"libur"},
+    "1-26":  {name:"Tahun Baru Imlek", type:"libur"},
+    "2-26":  {name:"Hari Raya Idulfitri", type:"libur"},
+    "2-27":  {name:"Cuti Bersama Idulfitri", type:"cuti"},
+    "3-26":  {name:"Wafat Yesus Kristus (Jumat Agung)", type:"libur"},
+    "5-1":   {name:"Hari Buruh Internasional", type:"libur"},
+    "5-5":   {name:"Iduladha", type:"libur"},
+    "5-25":  {name:"Tahun Baru Islam", type:"libur"},
+    "6-1":   {name:"Hari Lahir Pancasila", type:"libur"},
+    "8-3":   {name:"Maulid Nabi Muhammad SAW", type:"libur"},
+    "8-17":  {name:"Proklamasi Kemerdekaan RI", type:"libur"},
+    "12-14": {name:"Isra Mikraj Nabi Muhammad SAW", type:"libur"},
+    "12-25": {name:"Kelahiran Yesus Kristus (Natal)", type:"libur"},
+    "12-26": {name:"Cuti Bersama Hari Raya Natal", type:"cuti"},
+  },
+  2029: {
+    "1-1":   {name:"Tahun Baru Masehi", type:"libur"},
+    "2-13":  {name:"Tahun Baru Imlek", type:"libur"},
+    "2-14":  {name:"Hari Raya Idulfitri", type:"libur"},
+    "2-15":  {name:"Cuti Bersama Idulfitri", type:"cuti"},
+    "3-15":  {name:"Hari Suci Nyepi", type:"libur"},
+    "3-30":  {name:"Wafat Yesus Kristus (Jumat Agung)", type:"libur"},
+    "4-24":  {name:"Iduladha", type:"libur"},
+    "5-1":   {name:"Hari Buruh Internasional", type:"libur"},
+    "5-10":  {name:"Kenaikan Yesus Kristus", type:"libur"},
+    "5-14":  {name:"Tahun Baru Islam", type:"libur"},
+    "6-1":   {name:"Hari Lahir Pancasila", type:"libur"},
+    "7-24":  {name:"Maulid Nabi Muhammad SAW", type:"libur"},
+    "8-17":  {name:"Proklamasi Kemerdekaan RI", type:"libur"},
+    "12-3":  {name:"Isra Mikraj Nabi Muhammad SAW", type:"libur"},
+    "12-25": {name:"Kelahiran Yesus Kristus (Natal)", type:"libur"},
+    "12-26": {name:"Cuti Bersama Hari Raya Natal", type:"cuti"},
+  },
+  2030: {
+    "1-1":   {name:"Tahun Baru Masehi", type:"libur"},
+    "2-2":   {name:"Tahun Baru Imlek", type:"libur"},
+    "2-4":   {name:"Hari Raya Idulfitri", type:"libur"},
+    "2-5":   {name:"Hari Raya Idulfitri", type:"libur"},
+    "3-5":   {name:"Hari Suci Nyepi", type:"libur"},
+    "4-14":  {name:"Iduladha", type:"libur"},
+    "4-19":  {name:"Wafat Yesus Kristus (Jumat Agung)", type:"libur"},
+    "5-1":   {name:"Hari Buruh Internasional", type:"libur"},
+    "5-4":   {name:"Tahun Baru Islam", type:"libur"},
+    "5-17":  {name:"Hari Raya Waisak", type:"libur"},
+    "5-30":  {name:"Kenaikan Yesus Kristus", type:"libur"},
+    "6-1":   {name:"Hari Lahir Pancasila", type:"libur"},
+    "7-13":  {name:"Maulid Nabi Muhammad SAW", type:"libur"},
+    "8-17":  {name:"Proklamasi Kemerdekaan RI", type:"libur"},
+    "11-23": {name:"Isra Mikraj Nabi Muhammad SAW", type:"libur"},
+    "12-25": {name:"Kelahiran Yesus Kristus (Natal)", type:"libur"},
+    "12-26": {name:"Cuti Bersama Hari Raya Natal", type:"cuti"},
+  },
+};
+
+const today = new Date();
+let currentYear = YEARS.includes(today.getFullYear()) ? today.getFullYear() : OFFICIAL_YEAR;
+let currentMonth = (currentYear === today.getFullYear()) ? today.getMonth() : 0;
+
+function buildYearPills(){
+  const wrap = document.getElementById('yearPills');
+  wrap.innerHTML = '';
+  YEARS.forEach(y => {
+    const btn = document.createElement('button');
+    btn.className = 'year-pill' + (y === currentYear ? ' active' : '');
+    btn.textContent = y;
+    btn.addEventListener('click', () => {
+      currentYear = y;
+      currentMonth = (y === today.getFullYear()) ? today.getMonth() : 0;
+      renderAll();
+    });
+    wrap.appendChild(btn);
+  });
+
+  document.getElementById('yearInTitle').textContent = currentYear;
+  const note = document.getElementById('dataNote');
+  const subtitle = document.getElementById('subtitleText');
+  if (currentYear === OFFICIAL_YEAR) {
+    note.textContent = '17 hari libur nasional & 8 cuti bersama — data resmi SKB 3 Menteri.';
+    subtitle.textContent = 'Lengkap dengan hari libur nasional dan cuti bersama sesuai SKB 3 Menteri Nomor 1497, 2, dan 5 Tahun 2025.';
+  } else {
+    note.textContent = `Tanggal libur ${currentYear} masih berupa perkiraan — pemerintah biasanya baru menerbitkan SKB resmi menjelang tahun berjalan. Idulfitri, Iduladha, dan hari besar hijriah/saka lain dapat bergeser 1 hari setelah sidang isbat resmi.`;
+    subtitle.textContent = `Perkiraan hari libur nasional dan cuti bersama ${currentYear}, mengikuti pola tahun-tahun sebelumnya sambil menunggu SKB 3 Menteri resmi.`;
+  }
+}
+
+function buildMonthPills(){
+  const wrap = document.getElementById('monthPills');
+  wrap.innerHTML = '';
+  MONTHS.forEach((m, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'pill' + (i === currentMonth ? ' active' : '');
+    btn.textContent = m.slice(0,3);
+    btn.addEventListener('click', () => { currentMonth = i; render(); });
+    wrap.appendChild(btn);
+  });
+}
+
+function render(){
+  buildYearPills();
+  buildMonthPills();
+
+  const YEAR = currentYear;
+  const HOLIDAYS = HOLIDAYS_BY_YEAR[YEAR];
+  const isCurrentYearReal = today.getFullYear() === YEAR;
+  const monthNum = currentMonth + 1;
+  document.getElementById('monthTitle').innerHTML = `${MONTHS[currentMonth]} <span class="year">${YEAR}</span>`;
+
+  const firstDay = new Date(YEAR, currentMonth, 1);
+  const lastDate = new Date(YEAR, currentMonth + 1, 0).getDate();
+  // Monday-start offset: JS getDay() 0=Sun..6=Sat -> convert so Mon=0..Sun=6
+  const jsDay = firstDay.getDay();
+  const offset = (jsDay + 6) % 7;
+
+  const monthHolidays = Object.keys(HOLIDAYS).filter(k => k.startsWith(monthNum + "-"));
+  document.getElementById('monthMeta').textContent =
+    monthHolidays.length ? `${monthHolidays.length} tanggal merah bulan ini` : 'Tidak ada tanggal merah bulan ini';
+
+  const grid = document.getElementById('dayGrid');
+  grid.innerHTML = '';
+
+  for (let i = 0; i < offset; i++) {
+    const cell = document.createElement('div');
+    cell.className = 'day-cell pad';
+    grid.appendChild(cell);
+  }
+
+  for (let d = 1; d <= lastDate; d++) {
+    const cell = document.createElement('div');
+    const dateObj = new Date(YEAR, currentMonth, d);
+    const dow = (dateObj.getDay() + 6) % 7; // 0=Mon..6=Sun
+    const isSun = dow === 6;
+    const isFri = dow === 4;
+    const key = `${monthNum}-${d}`;
+    const holiday = HOLIDAYS[key];
+    const isToday = isCurrentYearReal && today.getMonth() === currentMonth && today.getDate() === d;
+
+    let cls = 'day-cell';
+    if (isSun) cls += ' sun';
+    else if (isFri) cls += ' fri';
+    if (isToday) cls += ' today';
+    if (holiday) {
+      cls += holiday.type === 'libur' ? ' libur' : ' cuti';
+      cls += ' has-note';
+    }
+    cell.className = cls;
+
+    const num = document.createElement('span');
+    num.className = 'num';
+    num.textContent = d;
+    cell.appendChild(num);
+
+    if (holiday) {
+      const dot = document.createElement('span');
+      dot.className = 'dot';
+      cell.appendChild(dot);
+
+      const tip = document.createElement('span');
+      tip.className = 'tooltip';
+      tip.textContent = holiday.name;
+      cell.appendChild(tip);
+    }
+
+    grid.appendChild(cell);
+  }
+
+  buildHolidayList();
+}
+
+function buildHolidayList(){
+  const list = document.getElementById('holidayList');
+  const YEAR = currentYear;
+  const MONTH = currentMonth + 1;
+  const HOLIDAYS = HOLIDAYS_BY_YEAR[YEAR];
+
+  // hanya keterangan untuk bulan yang sedang ditampilkan
+  const entries = Object.entries(HOLIDAYS).map(([key, val]) => {
+    const [m, d] = key.split('-').map(Number);
+    const dateObj = new Date(YEAR, m - 1, d);
+    return { m, d, dateObj, ...val };
+  }).filter(e => e.m === MONTH).sort((a, b) => a.dateObj - b.dateObj);
+
+  document.getElementById('listTitle').textContent = `Keterangan hari libur · ${MONTHS[currentMonth]} ${YEAR}`;
+
+  const liburCount = entries.filter(e => e.type === 'libur').length;
+  const cutiCount = entries.filter(e => e.type === 'cuti').length;
+  document.getElementById('listSub').textContent = entries.length
+    ? `${liburCount} hari libur nasional & ${cutiCount} cuti bersama pada bulan ${MONTHS[currentMonth]} ${YEAR}.`
+    : `Tidak ada hari libur nasional maupun cuti bersama pada bulan ${MONTHS[currentMonth]} ${YEAR}.`;
+
+  list.innerHTML = '';
+  entries.forEach(e => {
+    const li = document.createElement('li');
+    const dayName = DAY_NAMES[(e.dateObj.getDay() + 6) % 7];
+    li.innerHTML = `
+      <span class="date">${String(e.d).padStart(2,'0')} ${MONTHS[e.m-1].slice(0,3)}</span>
+      <span class="name">${e.name}<span class="day-of">${dayName}</span></span>
+      <span class="badge ${e.type}">${e.type === 'libur' ? 'Libur nasional' : 'Cuti bersama'}</span>
+    `;
+    list.appendChild(li);
+  });
+}
+
+document.getElementById('prevBtn').addEventListener('click', () => {
+  currentMonth = (currentMonth + 11) % 12;
+  render();
+});
+document.getElementById('nextBtn').addEventListener('click', () => {
+  currentMonth = (currentMonth + 1) % 12;
+  render();
+});
+
+function renderAll(){
+  render();
+}
+
+renderAll();
+</script>
+
+</body>
+</html>
